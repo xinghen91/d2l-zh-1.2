@@ -14,12 +14,13 @@ print(labels[:2])
 
 def semilogy(x_vals, y_vals, x_label, y_label, x2_vals=None, y2_vals=None, legend=None, figsize=(3.5, 2.5)):
     d2l.set_figsize(figsize)
-    d2l.plt.xlabel(x_vals)
-    d2l.plt.ylabel(y_vals)
+    d2l.plt.xlabel(x_label)
+    d2l.plt.ylabel(y_label)
     d2l.plt.semilogy(x_vals, y_vals)
     if x2_vals and y_vals:
         d2l.plt.semilogy(x2_vals, y2_vals, linestyle=':')
         d2l.plt.legend(legend)
+    d2l.plt.show()
 
 
 num_epochs, loss = 100, gloss.L2Loss()
@@ -48,13 +49,22 @@ def fit_and_plot(train_features, test_features, train_labels, test_labels):
             l.backward()
             trainer.step(batch_size)
 
-    train_ls.append(loss(net(train_features), train_labels).mean().asscalar())
-    test_ls.append(loss(net(test_features), test_labels).mean().asscalar())
-    print('final epoch: train loss ', train_ls[-1], ', test loss ', test_ls[-1])
-    semilogy(range(1, num_epochs + 1), train_ls, range(1, num_epochs + 1), test_ls, 'epochs', 'loss',
-                 ['train', 'test'])
+        train_ls.append(loss(net(train_features), train_labels).mean().asscalar())
+        test_ls.append(loss(net(test_features), test_labels).mean().asscalar())
+        print(' epoch: ', i, ' train loss ', train_ls[-1], ', test loss ', test_ls[-1])
+    print('final epoch: ', num_epochs, 'train loss ', train_ls[-1], ', test loss ', test_ls[-1])
+    semilogy(range(1, num_epochs + 1), train_ls, 'epochs', 'loss', range(1, num_epochs + 1), test_ls,
+             ['train', 'test'])
     print('weights : ', net[0].weight.data().asnumpy(), '\n b :', net[0].bias.data().asnumpy())
 
 
-fit_and_plot(poly_features[:n_train, :], poly_features[n_train:, :],
-             labels[:n_train], labels[n_train:])
+# fit_and_plot(poly_features[:n_train, :], poly_features[n_train:, :],
+#              labels[:n_train], labels[n_train:])
+
+#
+# fit_and_plot(features[:n_train, :], features[n_train:, :],
+#              labels[:n_train], labels[n_train:])
+
+
+fit_and_plot(poly_features[0:2, :], poly_features[n_train:, :], labels[0:2],
+             labels[n_train:])
